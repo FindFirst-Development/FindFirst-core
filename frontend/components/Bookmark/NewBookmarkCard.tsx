@@ -104,7 +104,7 @@ export default function NewBookmarkCard() {
 
   const handleOnSubmit = async (
     submittedBmk: NewBookmarkForm,
-    actions: any,
+    actions: any
   ) => {
     // Get the last inputted string and all the tags already entered.
     let tags: Tag[] = strTags.map((t) => ({ title: t, id: -1 }));
@@ -112,6 +112,12 @@ export default function NewBookmarkCard() {
       // FIXME
       tags.push({ title: tagInput, id: -1 });
     }
+
+    // Add default "untagged" tag if user has not provided any
+    if (!tags.length) {
+      tags = [{ title: "untagged", id: -1 }];
+    }
+
     let newBkmk: Bookmark = {
       id: -1,
       title: submittedBmk.title || submittedBmk.url,
