@@ -16,6 +16,35 @@ mono repo so everything one needs should be available to get started;
 > - Refer this project in your project's readme
 > - Mention the project at local meetups and tell your friends/colleagues
 
+## AI Coding Policy
+
+Let me preface this with this project cares about privacy,
+open source and maintaining the ability to index and find information.
+AI's break this model. How often has one asked for cite source and
+an entirely unrelated page come from the LLM? That's because their output
+it non-deterministic and it has to try to find a source to match it's understanding,
+like a grade school student trying to write an essay to back up their argument.
+
+FindFirst anchors knowledge with the intention to share, we should be built
+from the ground up.
+
+### A focus On learning
+
+I (@r-sandor), open sourced this project to help others learn,
+and share ideas. LLM's break that model. I don't care that you
+got your feature done quickly with an LLM according to my short issue description.
+If I wanted things to be done quickly I would just put my
+own agents to work and work through every issue, and close-source the project.
+
+I want people who want to work on this project to genuinely solve a problem,
+and understand the problem and potentially keep contributing.
+
+### AI commits
+
+Your code should be written by you, and understood by everyone. If you need
+to interact with AI to help with some problems that's acceptable but I don't
+accept agentic code.
+
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
