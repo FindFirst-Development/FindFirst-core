@@ -18,32 +18,39 @@ mono repo so everything one needs should be available to get started;
 
 ## AI Coding Policy
 
-Let me preface this with this project cares about privacy,
-open source and maintaining the ability to index and find information.
-AI's break this model. How often has one asked for cite source and
-an entirely unrelated page come from the LLM? That's because their output
-it non-deterministic and it has to try to find a source to match it's understanding,
-like a grade school student trying to write an essay to back up their argument.
+### AI commits
 
-FindFirst anchors knowledge with the intention to share, we should be built
-from the ground up.
+- Your code should be written by you, and understood by everyone.
+- Using AI chat tools to help solve a problem is acceptable.
+- No agentic code is accepted.
+- You must be able to claim authorship of all code you submit.
 
-### A focus On learning
+### Background
 
-I (@r-sandor), open sourced this project to help others learn,
-and share ideas. LLM's break that model. I don't care that you
-got your feature done quickly with an LLM according to my short issue description.
-If I wanted things to be done quickly I would just put my
-own agents to work and work through every issue, and close-source the project.
+Lets preface this with this project is a search engine at its core.
+This project cares about privacy, open source and the ability to index
+and find information, AI breaks this model.
+
+How often has one asked for cited a source and an LLM returns an entirely
+unrelated page, or a best a terrible source?
+
+LLM output is non-deterministic, and models often try to search after making
+a claim in order find a source that matches their output. This is not ideal mode
+of information retrieval for citations, research, or reproducibility.
+While the LLM my produce results quickly, it doesn't act a good authoritative source.
+
+FindFirst anchors knowledge with the intention to share. This should be built into
+the project from inception.
+
+#### A focus On learning
+
+I (@r-sandor), open sourced this project to help others learn and share ideas.
+Getting things done quickly with an LLM based on a short handwritten issue
+description is not the objective. If I wanted things to be done quickly I would
+just put my own agents to work, work through every issue, and close-source the project.
 
 I want people who want to work on this project to genuinely solve a problem,
 and understand the problem and potentially keep contributing.
-
-### AI commits
-
-Your code should be written by you, and understood by everyone. If you need
-to interact with AI to help with some problems that's acceptable but I don't
-accept agentic code.
 
 ## Table of Contents
 
@@ -59,6 +66,12 @@ accept agentic code.
 - [Join The Project Team](#join-the-project-team)
 
 ## Code of Conduct
+
+- Respectful Engagement.
+- Provide 48hrs for maintainers/contributor review
+- Allow for a week for maintainer's to review.
+  - The maintainers are full time software engineers with life demands outside
+    of work and open source.
 
 This project and everyone participating in it
 is governed by the [CONTRIBUTING.md Code of Conduct](./CODE_OF_CONDUCT.md).
@@ -87,11 +100,12 @@ We will then take care of the issue as soon as possible.
 
 ## I Want To Contribute
 
-> ### Legal Notice
->
-> When contributing to this project, you must agree that you have authored
-> 100% of the content, that you have the necessary rights to the content
-> and that the content you contribute may be provided under the project license.
+### Legal Notice
+
+- When contributing to this project, you must agree that you have authored
+100% of content and provided reference to any borrowed source for attribution.
+- Tat you have the necessary rights to borrowed content and that the content
+you contribute may be provided under the project license.
 
 ### Reporting Bugs
 
