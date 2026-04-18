@@ -1,9 +1,12 @@
-name: Build
+name: Build Screenshot
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "screenshot/app/build.gradle"
+      - "screenshot/app/src/*"
 
 jobs:
   build:
@@ -24,18 +27,7 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
-
       - name: Build and Push Server Container
         run: |
-          make build_server
-          docker push ghcr.io/r-sandor/findfirst-server:latest
-
-      - name: Build and Push Screenshot Container
-        run: |
           make build_screenshot
-          docker push ghcr.io/r-sandor/findfirst-screenshot:latest
-
-      - name: Build and Push Frontend Container
-        run: |
-          make build_frontend
-          docker push ghcr.io/r-sandor/findfirst-frontend:latest
+          docker push ghcr.io/FindFirst-Development/findfirst-screenshot:latest
