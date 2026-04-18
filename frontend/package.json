@@ -14,7 +14,7 @@
     "coverage": "cp .env.dev .env && vitest run --coverage",
     "vitest-preview": "vitest-preview",
     "local-e2e": "playwright test",
-    "tc-e2e": "playwright test -c ./playwright.config.testcontainers.ts"
+    "tc-e2e": "playwright test --config  ./tests_e2e/playwright.config.testcontainers.ts"
   },
   "dependencies": {
     "@next/env": "15.1.3",
@@ -56,7 +56,7 @@
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "jsdom": "^25.0.1",
-    "testcontainers": "^10.28.0",
+    "testcontainers": "^11.12.0",
     "vitest": "^3.2.4"
   },
   "pnpm": {
