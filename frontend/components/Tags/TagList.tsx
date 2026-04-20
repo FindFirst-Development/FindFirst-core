@@ -9,12 +9,19 @@ import itemStyle from "./tag-list-item.module.scss";
 import menuStyle from "styles/tag.module.scss";
 import { useSelectedTags } from "@/contexts/SelectedContext";
 import { useScreenSize } from "@/contexts/ScreenSizeContext";
+import { useBookmarks } from "@/contexts/BookmarkContext"; // import bookmarks for the "untagged" tag
+
 const TagList = () => {
   const userAuth = useAuth();
   const tagMap = useTags();
   const [loading, setLoading] = useState(false);
   const { selected, setSelected } = useSelectedTags();
   const isPC = useScreenSize();
+  const bookmark = useBookmarks();
+  // check if at least one bookmark has no tags
+  const hasUntaggedBookmark = bookmark.fetchedBookmarks.some(
+    (t) => t.tags.length === 0,
+  );
   useEffect(() => {
     if (userAuth && tagMap.size == 0) {
       setLoading(true);
@@ -51,6 +58,22 @@ const TagList = () => {
   }
 
   let groupItems: any = [];
+  // adds "untagged" tag to the tag list
+  if (hasUntaggedBookmark) {
+    groupItems.push(
+      <ListGroup.Item key={"untagged-item"} className={`${itemStyle.item}`}>
+        <button
+          onClick={(event) => selectTag(event, "untagged")}
+          className={`d-flex btn ${itemStyle.btn} justify-content-between align-items-start`}
+        >
+          untagged
+          <Badge bg="primary" pill>
+            {bookmark.fetchedBookmarks.filter((b) => b.tags.length == 0).length}
+          </Badge>
+        </button>
+      </ListGroup.Item>,
+    );
+  }
   tagMap.forEach((tagCnt) => {
     groupItems.push(
       <ListGroup.Item

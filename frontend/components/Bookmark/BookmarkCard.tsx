@@ -136,9 +136,12 @@ export default function BookmarkCard({ bookmark }: Readonly<BookmarkProp>) {
   useEffect(() => {
     if (bookmark) {
       const tagList: string[] = [];
-      bookmark.tags.forEach((tag: Tag) => {
-        tagList.push(tag.title);
-      });
+      if (bookmark.tags.length == 0) tagList.push("untagged");
+      else {
+        bookmark.tags.forEach((tag: Tag) => {
+          tagList.push(tag.title);
+        });
+      }
       setStrTags(tagList);
     }
   }, [bookmark]);
@@ -211,7 +214,11 @@ export default function BookmarkCard({ bookmark }: Readonly<BookmarkProp>) {
       );
     }
     api.deleteTagById(bookmark.id, tagId);
-    let titles = currentBookmark.current.tags.map((t) => t.title); // just the titles display
+    // if there are no tags to display, display "untagged", else display the tags for the bookmark
+    let titles =
+      currentBookmark.current.tags.length !== 0
+        ? currentBookmark.current.tags.map((t) => t.title)
+        : ["untagged"]; // just the titles display
     setStrTags(titles);
 
     // update the sidebar.
@@ -227,7 +234,10 @@ export default function BookmarkCard({ bookmark }: Readonly<BookmarkProp>) {
   const onPushTag = (tag: string) =>
     addTagToBookmark(bookmark, tag).then((action) => {
       dispatch(action);
-      setStrTags([...strTags, tag]);
+      setStrTags((prev) => {
+        const cleaned = prev.filter((t) => t != "untagged");
+        return [...cleaned, tag];
+      });
       currentBookmark.current.tags.push({ id: action.id, title: action.title });
     });
 
