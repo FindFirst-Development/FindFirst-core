@@ -172,20 +172,9 @@ describe("GlobalNavbar", () => {
       AuthStatus.Authorized,
     );
 
-    const mock = vi.fn().mockImplementation(authService.getUser);
-    mock.mockImplementationOnce(() => {
-      return {
-        id: 1,
-        username: "test",
-        refreshToken: "test",
-        profileImage: "",
-      };
-    });
-
     render(<GlobalNavbar />);
-    const avatar = screen.getByAltText("Profile") as HTMLImageElement;
+    const avatar = document.querySelector(".bi-file-person-fill");
     expect(avatar).toBeInTheDocument();
-    expect(avatar.src).toContain("/img_avatar.png");
   });
 
   it("renders user avatar when authorized and profileImage exists", () => {

@@ -9,24 +9,11 @@ import Export from "./Export";
 import Image from "next/image";
 import Searchbar from "./Searchbar";
 import navbarView from "styles/navbar.module.scss";
-import { useEffect, useState } from "react";
 import AccountModal from "./AccountModal";
 
 const GlobalNavbar: React.FC = () => {
   const userAuth = useAuth();
   const user = authService.getUser();
-  let [isMobile, setIsMobile] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth <= 767.98);
-
-    const checkWindowWidth = () => {
-      setIsMobile(window.innerWidth <= 767.98);
-    };
-
-    window.addEventListener("resize", checkWindowWidth);
-  }, []);
-
   const router = useRouter();
   function authButton() {
     if (userAuth == AuthStatus.Unauthorized || userAuth === undefined) {
@@ -75,20 +62,18 @@ const GlobalNavbar: React.FC = () => {
       className="bg-body-tertiary"
     >
       <Container className={navbarView.navContainer}>
-        {isMobile ? (
-          <Navbar.Brand
-            onClick={() => router.push("/")}
-            className={` ${navbarView.navBrand}`}
-          >
-            <Image
-              src="/basic-f-v2-dark-mode-v2-fav.png"
-              width="38"
-              height="30"
-              className="d-inline-block align-top"
-              alt="FindFirst Logo"
-            />
-          </Navbar.Brand>
-        ) : null}
+        <Navbar.Brand
+          onClick={() => router.push("/")}
+          className={` ${navbarView.navBrand}`}
+        >
+          <Image
+            src="/basic-f-v2-dark-mode-v2-fav.png"
+            width="38"
+            height="30"
+            className="d-inline-block align-top"
+            alt="FindFirst Logo"
+          />
+        </Navbar.Brand>
 
         {/* Search bar stays visible always */}
         {userAuth === AuthStatus.Authorized ? <Searchbar /> : null}
