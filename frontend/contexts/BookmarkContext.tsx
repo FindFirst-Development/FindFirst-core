@@ -24,7 +24,7 @@ export const BookmarkContext = createContext<ProviderProps>({
 });
 
 export const BookmarkDispatchContext = createContext<Dispatch<BookmarkAction>>(
-  () => {},
+  () => { },
 );
 
 export function useBookmarks() {
