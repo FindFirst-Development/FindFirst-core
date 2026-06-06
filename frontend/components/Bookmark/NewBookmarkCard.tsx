@@ -112,6 +112,7 @@ export default function NewBookmarkCard() {
       // FIXME
       tags.push({ title: tagInput, id: -1 });
     }
+
     let newBkmk: Bookmark = {
       id: -1,
       title: submittedBmk.title || submittedBmk.url,

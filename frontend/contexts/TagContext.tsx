@@ -3,13 +3,25 @@ import TagAction from "@/types/Bookmarks/TagAction";
 import { TagWithCnt } from "@/types/Bookmarks/Tag";
 import Bookmark from "@type/Bookmarks/Bookmark";
 
+const initialTagCnts: Map<number, TagWithCnt> = new Map();
+
 export const TagsCntContext = createContext<Map<number, TagWithCnt>>(
   new Map<number, TagWithCnt>(),
 );
 export const TagsCntDispatchContext = createContext<Dispatch<TagAction>>(
-  () => {},
+  () => { },
 );
 
+/**
+ * This code looks complex and it kind of is, its layers of React gobbledygook.
+ * The short version of it is that this provider uses 
+ * TagsCntDispatchContext context and declares that anyone that uses
+ * TagsCntDispatchContext will get the provider value of dispatch. 
+ * Meaning that the tagCntReducer will be available to increment those new bookmarks for you.
+ *
+ * You might say to yourself well the TagsCntDispatchContext looks like its just a context.
+ * Yes, you're right but we then do the magic in the JSX below to wire it in.
+ */
 export function TagCntProvider({
   children,
 }: {
@@ -26,9 +38,14 @@ export function TagCntProvider({
   );
 }
 
+/**
+  * tagMap: is the initial state, in this case an empty map.
+  * action: add, delete.
+  */
 function tagCntReducer(tagMap: Map<number, TagWithCnt>, action: TagAction) {
   const tagId = action.id;
   const tagCnt: TagWithCnt | undefined = tagMap.get(action.id);
+  const untaggeds: TagWithCnt | undefined = tagMap.get(-1);
   // create a deep copy of the existing.
   const newTagMap = new Map(tagMap);
 
@@ -36,15 +53,17 @@ function tagCntReducer(tagMap: Map<number, TagWithCnt>, action: TagAction) {
 
   switch (action.type) {
     case "add": {
-      if (tagCnt) {
+      if (tagCnt !== undefined) {
         addBkmkToTag(tagCnt, action.bookmark);
         newTagMap.set(tagId, {
+          id: tagId,
           title: tagCnt.title,
           count: tagCnt.count + 1,
           associatedBkmks: tagCnt.associatedBkmks,
         });
       } else {
         newTagMap.set(tagId, {
+          id: tagId,
           title: action.title,
           count: 1,
           associatedBkmks: [bkmk],
@@ -55,11 +74,13 @@ function tagCntReducer(tagMap: Map<number, TagWithCnt>, action: TagAction) {
     case "delete": {
       if (tagCnt && tagCnt.count > 1) {
         newTagMap.set(tagId, {
+          id: tagId,
           title: tagCnt.title,
           count: tagCnt.count - 1,
           associatedBkmks: remBkmkFrmTag(tagCnt, action.bookmark),
         });
       } else {
+        // delete the tag from the map if its the last one
         newTagMap.delete(action.id);
       }
       return newTagMap;
@@ -98,4 +119,3 @@ export function useTagsDispatch() {
   return useContext(TagsCntDispatchContext);
 }
 
-const initialTagCnts: Map<number, TagWithCnt> = new Map();

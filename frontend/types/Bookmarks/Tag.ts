@@ -1,4 +1,5 @@
 import Bookmark from "./Bookmark";
+export const UNTAGGED = "untagged"
 
 export default interface Tag {
   id: number;
@@ -13,6 +14,7 @@ export interface TagReqPayload {
 
 // Tag with count associated bookmarks.
 export interface TagWithCnt {
+  id?: number;
   title: string;
   associatedBkmks: Bookmark[];
   count: number;

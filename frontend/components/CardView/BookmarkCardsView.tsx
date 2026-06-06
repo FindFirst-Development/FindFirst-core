@@ -6,14 +6,6 @@ import { useTags } from "@/contexts/TagContext";
 import { TagWithCnt } from "@type/Bookmarks/Tag";
 import cardView from "styles/cardView.module.scss";
 
-function getTagId(map: Map<number, TagWithCnt>, tagTitle: string) {
-  for (let [k, v] of map) {
-    if (v.title === tagTitle) {
-      return k;
-    }
-  }
-  return -1;
-}
 
 // Bookmark group composed of Bookmarks.
 export default function BookmarkCardsView() {
@@ -35,12 +27,9 @@ export default function BookmarkCardsView() {
     } else {
       selected.forEach((selectedTag) => {
         // get tagId of each selected
-        const key = getTagId(tags, selectedTag);
-        if (key > 0) {
-          const selectedBkmks = tags.get(key)?.associatedBkmks.map((v) => v.id);
-          if (selectedBkmks) {
-            addIfNotInList(selectedBkmks);
-          }
+        const selectedBkmks = tags.get(selectedTag)?.associatedBkmks.map((v) => v.id);
+        if (selectedBkmks) {
+          addIfNotInList(selectedBkmks);
         }
       });
       return [...filterMap.values()];

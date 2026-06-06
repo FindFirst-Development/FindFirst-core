@@ -8,13 +8,13 @@ import {
 } from "react";
 
 export interface TagProvider {
-  selected: string[];
-  setSelected: Dispatch<SetStateAction<string[]>>;
+  selected: number[];
+  setSelected: Dispatch<SetStateAction<number[]>>;
 }
 
 export const SelectedTagContext = createContext<TagProvider>({
   selected: [],
-  setSelected: () => {},
+  setSelected: () => { },
 });
 
 export function SelectedTagProvider({
@@ -22,7 +22,7 @@ export function SelectedTagProvider({
 }: {
   readonly children: React.ReactNode;
 }) {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
 
   const selectedMemo = useMemo(() => ({ selected, setSelected }), [selected]);
 

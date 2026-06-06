@@ -7,7 +7,7 @@ import DeleteModal from "./DeleteModal";
 import style from "./bookmarkCard.module.scss";
 import { useBookmarkDispatch } from "@/contexts/BookmarkContext";
 import BookmarkAction from "@/types/Bookmarks/BookmarkAction";
-import Tag from "@/types/Bookmarks/Tag";
+import Tag, { UNTAGGED } from "@/types/Bookmarks/Tag";
 import api from "@/api/Api";
 import CardBody from "./CardBody";
 import { SERVER_URL } from "@type/global";
@@ -203,11 +203,11 @@ export default function BookmarkCard({ bookmark }: Readonly<BookmarkProp>) {
     });
   }
 
-  const onDeleteTag = (idx: number) => {
-    const tagId = bookmark.tags[idx].id;
+  const onDeleteTag = (t: string) => {
+    const tagId = bookmark.tags.find(st => st.title === t)?.id!;
     if (currentBookmark.current) {
       currentBookmark.current.tags = currentBookmark.current.tags.filter(
-        (_t, i) => i !== idx,
+        (bt, i) => bt.id !== tagId,
       );
     }
     api.deleteTagById(bookmark.id, tagId);
@@ -222,23 +222,39 @@ export default function BookmarkCard({ bookmark }: Readonly<BookmarkProp>) {
       bookmark,
     };
     dispatch(action);
+
+    if (titles) {
+      let action: TagAction = {
+        type: "add",
+        id: -1,
+        title: "",
+        bookmark,
+      };
+      dispatch(action);
+
+    }
   };
 
   const onPushTag = (tag: string) =>
     addTagToBookmark(bookmark, tag).then((action) => {
       dispatch(action);
+      if (strTags.length === 0) {
+        let action: TagAction = {
+          type: "delete",
+          id: -1,
+          title: UNTAGGED,
+          bookmark,
+        };
+        dispatch(action);
+
+      }
       setStrTags([...strTags, tag]);
-      currentBookmark.current.tags.push({ id: action.id, title: action.title });
     });
 
   function getIdxFromTitle(title: string): number {
     return bookmark.tags.findIndex((t) => t.title == title);
   }
 
-  const onChange = (e: any) => {
-    const { value } = e.target;
-    setInput(value);
-  };
 
   function Content(): ReactNode {
     return bookmark.screenshotUrl ? (
