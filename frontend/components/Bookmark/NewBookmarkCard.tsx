@@ -154,8 +154,8 @@ export default function NewBookmarkCard() {
     setTitleInput("");
   };
 
-  const deleteTag = (index: number, setField: any) => {
-    const tags = strTags.filter((t, i) => i !== index);
+  const deleteTag = (str: string, setField: any) => {
+    const tags = strTags.filter(t => t !== str);
     setField("tagTitles", tags, false);
     setStrTags(tags);
   };
@@ -243,7 +243,7 @@ export default function NewBookmarkCard() {
                   tags={strTags}
                   inputValue={tagInput}
                   setInputValue={setTagInput}
-                  onDeleteTag={(index) => deleteTag(index, setFieldValue)}
+                  onDeleteTag={(str) => deleteTag(str, setFieldValue)}
                   onPushTag={(tag) => onPushTag(tag, setFieldValue)}
                   testIdPrefix="new-bk-"
                 ></TagInput>
