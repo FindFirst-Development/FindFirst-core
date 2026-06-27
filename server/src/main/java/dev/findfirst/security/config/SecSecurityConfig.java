@@ -2,12 +2,15 @@ package dev.findfirst.security.config;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Collections;
 
 import dev.findfirst.security.conditions.OAuthClientsCondition;
 import dev.findfirst.security.filters.CookieAuthenticationFilter;
 import dev.findfirst.security.jwt.AuthEntryPointJwt;
+import dev.findfirst.security.jwt.UserAuthenticationToken;
 import dev.findfirst.security.oauth2client.handlers.Oauth2LoginSuccessHandler;
 import dev.findfirst.security.userauth.service.UserDetailsServiceImpl;
+import dev.findfirst.security.userauth.utils.Constants;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -29,6 +32,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -102,7 +106,15 @@ public class SecSecurityConfig {
     http.csrf(csrf -> csrf.disable())
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(rs -> rs.jwt(jwt -> jwt.decoder(jwtDecoder())));
+        .oauth2ResourceServer(rs -> rs.jwt(jwt -> jwt.decoder(jwtDecoder())
+            .jwtAuthenticationConverter(token -> {
+              Number userId = token.getClaim(Constants.USER_ID_CLAIM);
+              Number roleId = token.getClaim(Constants.ROLE_ID_CLAIM);
+              String roleName = token.getClaim(Constants.ROLE_NAME_CLAIM);
+              return new UserAuthenticationToken(token.getSubject(), roleId.intValue(),
+                  Collections.singletonList(new SimpleGrantedAuthority(roleName)),
+                  userId.intValue());
+            })));
 
     http.httpBasic(
         httpBasicCustomizer -> httpBasicCustomizer.authenticationEntryPoint(unauthorizedHandler))

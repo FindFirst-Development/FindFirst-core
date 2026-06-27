@@ -173,14 +173,14 @@ public class UserController {
       log.debug("User Signing in");
       tkns = userService.signinUser(authorization);
     } catch (NoUserFoundException e) {
-      return ResponseEntity.badRequest().body(new TokenRefreshResponse(null, null, e.toString()));
+      return ResponseEntity.badRequest().body(new TokenRefreshResponse(null, null, null, e.toString()));
     }
 
     ResponseCookie cookie = ResponseCookie.from("findfirst", tkns.jwt()).secure(secure).path("/")
         .domain(domain).httpOnly(true).build();
 
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-        .body(new TokenRefreshResponse(tkns.refreshToken()));
+        .body(new TokenRefreshResponse(tkns.jwt(), tkns.refreshToken()));
   }
 
   @PostMapping("/refreshToken")

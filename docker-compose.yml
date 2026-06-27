@@ -12,6 +12,9 @@ services:
       - dev
       - backend
   server:
+    build:
+      context: ./server
+      dockerfile: ../docker/server/Dockerfile
     image: ghcr.io/r-sandor/findfirst-server:latest
     ports:
       - "9000:9000"
