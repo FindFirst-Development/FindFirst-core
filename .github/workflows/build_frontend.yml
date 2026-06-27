@@ -34,4 +34,4 @@ jobs:
       - name: Build and Push Frontend Container
         run: |
           make build_frontend
-          docker push ghcr.io/FindFirst-Development/findfirst-frontend:latest
+          docker push ghcr.io/findfirst-development/findfirst-frontend:latest
