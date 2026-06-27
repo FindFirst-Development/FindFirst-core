@@ -21,7 +21,7 @@ export default async function handler(
     });
     res.setHeader(
       "Content-Type",
-      response.headers["content-type"] || "image/png",
+      "image/png",
     );
     res.setHeader("Cache-Control", "public, max-age=3600");
     res.end(Buffer.from(response.data), "binary");
