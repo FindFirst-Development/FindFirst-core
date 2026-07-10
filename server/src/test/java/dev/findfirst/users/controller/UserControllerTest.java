@@ -1,9 +1,7 @@
 package dev.findfirst.users.controller;
 
 import static dev.findfirst.utilities.HttpUtility.getHttpEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,14 +10,19 @@ import java.util.Properties;
 
 import dev.findfirst.core.annotations.IntegrationTest;
 import dev.findfirst.core.annotations.MockTypesense;
+import dev.findfirst.core.repository.jdbc.BookmarkJDBCRepository;
+import dev.findfirst.core.repository.jdbc.TagJDBCRepository;
 import dev.findfirst.core.service.TypesenseService;
 import dev.findfirst.security.userauth.models.TokenRefreshResponse;
 import dev.findfirst.security.userauth.models.payload.request.SignupRequest;
+import dev.findfirst.users.exceptions.NoUserFoundException;
 import dev.findfirst.users.model.MailHogMessage;
 import dev.findfirst.users.model.oauth2.Oauth2Source;
 import dev.findfirst.users.model.user.TokenPassword;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.findfirst.users.model.user.User;
+import dev.findfirst.users.repository.UserRepo;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -249,5 +252,49 @@ class UserControllerTest {
     var sources = response.getBody();
     assertTrue(sources.length == 1);
     assertEquals("GitHub", sources[0].provider(), "Github should be the provider.");
+  }
+
+  @Autowired
+  private UserRepo userRepo;
+
+  @Autowired
+  private BookmarkJDBCRepository bookmarkJDBCRepository;
+
+  @Autowired
+  private TagJDBCRepository tagJDBCRepository;
+
+  @Test
+  void testDeleteUser() throws Exception {
+
+    SignupRequest request = new SignupRequest(
+            "testUser",
+            "testUser@gmail.com",
+            "testPassword"
+    );
+
+    restTemplate.postForEntity("/user/signup",request,String.class);
+
+      var token = getTokenFromEmail(0, 1);
+      
+      var regResponse = restTemplate.getForEntity("/user/regitrationConfirm?token={token}",
+              String.class, token);
+      assertEquals(HttpStatus.SEE_OTHER, regResponse.getStatusCode());
+
+    User user = userRepo.findByUsername("testUser")
+            .orElseThrow(NoUserFoundException::new);
+
+//   first delete
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBasicAuth("testUser","testPassword");
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+    var response = restTemplate.exchange("/user",HttpMethod.DELETE,entity,Void.class);
+    assertEquals(HttpStatus.OK,response.getStatusCode());
+
+//    Checking
+
+    assertFalse(userRepo.existsByUsername("testUser"));
+    assertTrue(bookmarkJDBCRepository.findAllBookmarksByUser(user.getUserId()).isEmpty());
+    assertTrue(tagJDBCRepository.findAllByUserId(user.getUserId()).isEmpty());
+
   }
 }

@@ -249,4 +249,15 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
   }
+
+  @DeleteMapping
+  public ResponseEntity<?> deleteUserAccount() {
+      try {
+          userService.deleteUserAccount();
+      } catch (NoUserFoundException e) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is already deleted");
+      }
+      return ResponseEntity.status(HttpStatus.OK).build();
+  }
+
 }
