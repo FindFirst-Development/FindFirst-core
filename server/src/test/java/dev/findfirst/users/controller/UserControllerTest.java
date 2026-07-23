@@ -280,12 +280,20 @@ class UserControllerTest {
               String.class, token);
       assertEquals(HttpStatus.SEE_OTHER, regResponse.getStatusCode());
 
+//      Sign in
+    HttpHeaders signInHeaders = new HttpHeaders();
+    signInHeaders.setBasicAuth("testUser","testPassword");
+    HttpEntity<String> signInEntity = new HttpEntity<>(signInHeaders);
+    var signInResponse = restTemplate.exchange("/user/signin",HttpMethod.POST,signInEntity, TokenRefreshResponse.class);
+    assertEquals(HttpStatus.OK,signInResponse.getStatusCode());
+
     User user = userRepo.findByUsername("testUser")
             .orElseThrow(NoUserFoundException::new);
 
 //   first delete
     HttpHeaders headers = new HttpHeaders();
-    headers.setBasicAuth("testUser","testPassword");
+    String accessToken = signInResponse.getBody().accessToken();
+    headers.setBearerAuth(accessToken);
     HttpEntity<String> entity = new HttpEntity<>(headers);
     var response = restTemplate.exchange("/user",HttpMethod.DELETE,entity,Void.class);
     assertEquals(HttpStatus.OK,response.getStatusCode());

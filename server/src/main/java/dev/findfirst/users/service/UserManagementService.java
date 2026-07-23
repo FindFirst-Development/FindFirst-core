@@ -10,8 +10,9 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
-import dev.findfirst.core.service.BookmarkService;
-import dev.findfirst.core.service.TagService;
+import dev.findfirst.core.repository.jdbc.BookmarkJDBCRepository;
+import dev.findfirst.core.repository.jdbc.BookmarkTagRepository;
+import dev.findfirst.core.repository.jdbc.TagJDBCRepository;
 import dev.findfirst.security.jwt.service.RefreshTokenService;
 import dev.findfirst.security.jwt.service.TokenService;
 import dev.findfirst.security.userauth.context.UserContext;
@@ -49,8 +50,10 @@ public class UserManagementService {
   private final PasswordEncoder passwdEncoder;
   private final TokenService ts;
   private final UserContext ut;
-  private final BookmarkService bookmarkService;
-  private final TagService tagService;
+  private final BookmarkJDBCRepository bookmarkJDBCRepository;
+  private final BookmarkTagRepository bookmarkTagRepository;
+  private final TagJDBCRepository tagJDBCRepository;
+
 
   @Value("${findfirst.upload.location}")
   private String uploadLocation;
@@ -232,8 +235,9 @@ public class UserManagementService {
             .orElseThrow(NoUserFoundException::new);
     log.info("Deleting user account"+id);
 
-    bookmarkService.deleteAllBookmarks();
-    tagService.deleteAllTags();
+    userRepo.deleteAllBookmarkTags(id);
+    userRepo.deleteAllUserBookmarks(id);
+    userRepo.deleteAllUserTags(id);
     userRepo.delete(user);
 
     log.info("Successfully deleted user "+id);
