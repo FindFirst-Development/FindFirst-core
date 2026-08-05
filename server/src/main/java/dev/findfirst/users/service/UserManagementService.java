@@ -230,16 +230,15 @@ public class UserManagementService {
 
   @Transactional
   public void deleteUserAccount() throws NoUserFoundException {
-    Integer id = ut.getUserId();
-    User user = getUserById(id)
-            .orElseThrow(NoUserFoundException::new);
-    log.info("Deleting user account"+id);
+    int id = ut.getUserId();
+    User user = getUserById(id).orElseThrow(NoUserFoundException::new);
+    log.info("Deleting user account" + id);
 
     userRepo.deleteAllBookmarkTags(id);
     userRepo.deleteAllUserBookmarks(id);
     userRepo.deleteAllUserTags(id);
     userRepo.delete(user);
 
-    log.info("Successfully deleted user "+id);
+    log.info("Successfully deleted user " + id);
   }
 }

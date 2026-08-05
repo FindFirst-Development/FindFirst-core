@@ -173,7 +173,8 @@ public class UserController {
       log.debug("User Signing in");
       tkns = userService.signinUser(authorization);
     } catch (NoUserFoundException e) {
-      return ResponseEntity.badRequest().body(new TokenRefreshResponse(null, null, null, e.toString()));
+      return ResponseEntity.badRequest()
+          .body(new TokenRefreshResponse(null, null, null, e.toString()));
     }
 
     ResponseCookie cookie = ResponseCookie.from("findfirst", tkns.jwt()).secure(secure).path("/")
@@ -251,13 +252,8 @@ public class UserController {
   }
 
   @DeleteMapping
-  public ResponseEntity<?> deleteUserAccount() {
-      try {
-          userService.deleteUserAccount();
-      } catch (NoUserFoundException e) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is already deleted");
-      }
-      return ResponseEntity.status(HttpStatus.OK).build();
+  public ResponseEntity<?> deleteUserAccount() throws NoUserFoundException {
+       userService.deleteUserAccount();
+       return ResponseEntity.status(HttpStatus.OK).body("deleted successfully");
   }
-
 }

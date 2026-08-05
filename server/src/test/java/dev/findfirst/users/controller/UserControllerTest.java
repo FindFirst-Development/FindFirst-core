@@ -1,7 +1,11 @@
 package dev.findfirst.users.controller;
 
 import static dev.findfirst.utilities.HttpUtility.getHttpEntity;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,10 +23,10 @@ import dev.findfirst.users.exceptions.NoUserFoundException;
 import dev.findfirst.users.model.MailHogMessage;
 import dev.findfirst.users.model.oauth2.Oauth2Source;
 import dev.findfirst.users.model.user.TokenPassword;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.findfirst.users.model.user.User;
 import dev.findfirst.users.repository.UserRepo;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,15 +37,12 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.client.HttpClientErrorException;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -136,6 +137,7 @@ class UserControllerTest {
       assertEquals(HttpStatus.SEE_OTHER, regResponse.getStatusCode());
     } catch (Exception e) {
       // fail the test should show message
+
       assertTrue(false, e.getMessage());
     }
   }
@@ -266,43 +268,46 @@ class UserControllerTest {
   @Test
   void testDeleteUser() throws Exception {
 
-    SignupRequest request = new SignupRequest(
-            "testUser",
-            "testUser@gmail.com",
-            "testPassword"
-    );
+    SignupRequest request = new SignupRequest("testUser", "testUser@gmail.com", "testPassword");
 
-    restTemplate.postForEntity("/user/signup",request,String.class);
+    restTemplate.postForEntity("/user/signup", request, String.class);
 
-      var token = getTokenFromEmail(0, 1);
-      
-      var regResponse = restTemplate.getForEntity("/user/regitrationConfirm?token={token}",
-              String.class, token);
-      assertEquals(HttpStatus.SEE_OTHER, regResponse.getStatusCode());
+    var token = getTokenFromEmail(0, 1);
 
-//      Sign in
+    var regResponse =
+        restTemplate.getForEntity("/user/regitrationConfirm?token={token}", String.class, token);
+    assertEquals(HttpStatus.SEE_OTHER, regResponse.getStatusCode());
+
+    // Sign in
     HttpHeaders signInHeaders = new HttpHeaders();
-    signInHeaders.setBasicAuth("testUser","testPassword");
+    signInHeaders.setBasicAuth("testUser", "testPassword");
     HttpEntity<String> signInEntity = new HttpEntity<>(signInHeaders);
-    var signInResponse = restTemplate.exchange("/user/signin",HttpMethod.POST,signInEntity, TokenRefreshResponse.class);
-    assertEquals(HttpStatus.OK,signInResponse.getStatusCode());
+    var signInResponse = restTemplate.exchange("/user/signin", HttpMethod.POST, signInEntity,
+        TokenRefreshResponse.class);
+    assertEquals(HttpStatus.OK, signInResponse.getStatusCode());
 
-    User user = userRepo.findByUsername("testUser")
-            .orElseThrow(NoUserFoundException::new);
+    User user = userRepo.findByUsername("testUser").orElseThrow(NoUserFoundException::new);
 
-//   first delete
+    // first delete
     HttpHeaders headers = new HttpHeaders();
     String accessToken = signInResponse.getBody().accessToken();
     headers.setBearerAuth(accessToken);
     HttpEntity<String> entity = new HttpEntity<>(headers);
-    var response = restTemplate.exchange("/user",HttpMethod.DELETE,entity,Void.class);
-    assertEquals(HttpStatus.OK,response.getStatusCode());
+    var response1 = restTemplate.exchange("/user", HttpMethod.DELETE, entity, Void.class);
+    assertEquals(HttpStatus.OK, response1.getStatusCode());
 
-//    Checking
+    // Checking
 
     assertFalse(userRepo.existsByUsername("testUser"));
     assertTrue(bookmarkJDBCRepository.findAllBookmarksByUser(user.getUserId()).isEmpty());
     assertTrue(tagJDBCRepository.findAllByUserId(user.getUserId()).isEmpty());
 
+    // second delete should throw exception of not found as we are not revoking the token
+    ResponseEntity<Void> response =
+            restTemplate.exchange("/user", HttpMethod.DELETE, entity, Void.class);
+
+    System.out.println(response.getStatusCode());
+
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 }
