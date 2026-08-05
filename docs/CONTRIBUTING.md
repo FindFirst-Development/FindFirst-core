@@ -16,6 +16,42 @@ mono repo so everything one needs should be available to get started;
 > - Refer this project in your project's readme
 > - Mention the project at local meetups and tell your friends/colleagues
 
+## AI Coding Policy
+
+### AI commits
+
+- Your code should be written by you, and understood by everyone.
+- Using AI chat tools to help solve a problem is acceptable.
+- No agentic code is accepted.
+- You must be able to claim authorship of all code you submit.
+
+### Background
+
+Lets preface this with this project is a search engine at its core.
+This project cares about privacy, open source and the ability to index
+and find information, AI breaks this model.
+
+How often has one asked for cited a source and an LLM returns an entirely
+unrelated page, or a best a terrible source?
+
+LLM output is non-deterministic, and models often try to search after making
+a claim in order find a source that matches their output. This is not ideal mode
+of information retrieval for citations, research, or reproducibility.
+While the LLM my produce results quickly, it doesn't act a good authoritative source.
+
+FindFirst anchors knowledge with the intention to share. This should be built into
+the project from inception.
+
+#### A focus On learning
+
+I (@r-sandor), open sourced this project to help others learn and share ideas.
+Getting things done quickly with an LLM based on a short handwritten issue
+description is not the objective. If I wanted things to be done quickly I would
+just put my own agents to work, work through every issue, and close-source the project.
+
+I want people who want to work on this project to genuinely solve a problem,
+and understand the problem and potentially keep contributing.
+
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
@@ -30,6 +66,12 @@ mono repo so everything one needs should be available to get started;
 - [Join The Project Team](#join-the-project-team)
 
 ## Code of Conduct
+
+- Respectful Engagement.
+- Provide 48hrs for maintainers/contributor review
+- Allow for a week for maintainer's to review.
+  - The maintainers are full time software engineers with life demands outside
+    of work and open source.
 
 This project and everyone participating in it
 is governed by the [CONTRIBUTING.md Code of Conduct](./CODE_OF_CONDUCT.md).
@@ -58,11 +100,12 @@ We will then take care of the issue as soon as possible.
 
 ## I Want To Contribute
 
-> ### Legal Notice
->
-> When contributing to this project, you must agree that you have authored
-> 100% of the content, that you have the necessary rights to the content
-> and that the content you contribute may be provided under the project license.
+### Legal Notice
+
+- When contributing to this project, you must agree that you have authored
+100% of content and provided reference to any borrowed source for attribution.
+- Tat you have the necessary rights to borrowed content and that the content
+you contribute may be provided under the project license.
 
 ### Reporting Bugs
 
