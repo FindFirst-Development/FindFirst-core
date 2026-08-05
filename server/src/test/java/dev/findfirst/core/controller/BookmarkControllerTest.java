@@ -217,7 +217,6 @@ class BookmarkControllerTest {
         .setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
     String oldTitle = "Dark mode guide";
-    String ifScrapableTitle = "Dark mode in React: An in-depth guide - LogRocket Blog";
     String newTitle = "Dark MODE";
     String url = "https://blog.logrocket.com/dark-mode-react-in-depth-guide/#what-dark-mode";
 
@@ -229,14 +228,9 @@ class BookmarkControllerTest {
         getHttpEntity(restTemplate, new UpdateBookmarkReq(id, null, null, null)),
         BookmarkDTO.class);
     var bkmkDTO = noChangeReq.getBody();
-    var scrapable = bkmkDTO.scrapable();
 
-    if (scrapable) {
-      assertEquals(ifScrapableTitle, bkmkDTO.title());
-    } else {
-      assertEquals(oldTitle, bkmkDTO.title());
-    }
-
+    // The title was given on the add request, so it is kept even though the url was scraped.
+    assertEquals(oldTitle, bkmkDTO.title());
     assertEquals(url, bkmkDTO.url());
 
     var updateReq = restTemplate.exchange(bookmarkURI, HttpMethod.PATCH,
