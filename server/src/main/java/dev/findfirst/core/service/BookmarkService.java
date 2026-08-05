@@ -171,7 +171,6 @@ public class BookmarkService {
     }
 
     Document retDoc = null;
-    String title = reqBkmk.title();
     var screenshotUrlOpt = Optional.of("");
     boolean shouldScrape = reqBkmk.scrapable();
 
@@ -182,21 +181,11 @@ public class BookmarkService {
 
     if (shouldScrape) {
       log.debug("Scrapable: true.\tScrapping URL and taking screenshot.");
-
-      try {
-        retDoc = Jsoup.connect(reqBkmk.url()).get();
-        log.debug("Response: {}\tTitle: {}", retDoc.connection().response().statusMessage(),
-            retDoc.title());
-        title = !retDoc.title().isEmpty() ? retDoc.title() : reqBkmk.title();
-      } catch (IOException e) {
-        log.error(e.toString());
-      }
-
-      title = !title.isEmpty() ? title : reqBkmk.title();
+      retDoc = scrape(reqBkmk.url());
       screenshotUrlOpt = sManager.getScreenshot(reqBkmk.url());
-    } else if (title == null || title.isEmpty()) {
-      title = new URI(reqBkmk.url()).getHost();
     }
+
+    String title = resolveTitle(reqBkmk, retDoc);
 
     var user = userService.getUserById(uContext.getUserId()).orElseThrow();
 
@@ -221,6 +210,59 @@ public class BookmarkService {
 
     newBkmkJdbc.setTags(savedTags);
     return convertBookmarkJDBCToDTO(List.of(newBkmkJdbc), user.getUserId()).get(0);
+  }
+
+  /**
+   * Fetches the page so its title and text can be indexed.
+   *
+   * @param url the url to fetch.
+   * @return the fetched document, or null when the page could not be reached.
+   */
+  private Document scrape(String url) {
+    try {
+      var doc = Jsoup.connect(url).get();
+      log.debug("Scraped Title: {}", doc.title());
+      return doc;
+    } catch (IOException e) {
+      log.error(e.toString());
+      return null;
+    }
+  }
+
+  /**
+   * Resolves the title to store for a new bookmark. A title the user explicitly gave us always wins
+   * over the one found while scraping the page, otherwise there would be no way to give a scrapable
+   * bookmark a custom title.
+   *
+   * @param reqBkmk the add request as it came from the client.
+   * @param scrapedDoc the scraped page, null when the url was not or could not be scraped.
+   * @return the explicit title, else the scraped title, else the host of the url.
+   * @throws URISyntaxException if there is no title to fall back on and the url is malformed.
+   */
+  private String resolveTitle(AddBkmkReq reqBkmk, Document scrapedDoc) throws URISyntaxException {
+    if (hasExplicitTitle(reqBkmk)) {
+      return reqBkmk.title();
+    }
+
+    if (scrapedDoc != null && !scrapedDoc.title().isBlank()) {
+      return scrapedDoc.title();
+    }
+
+    // Nothing was given and nothing was scraped, so the host is the best we can do.
+    var title = reqBkmk.title();
+    return title == null || title.isBlank() ? new URI(reqBkmk.url()).getHost() : title;
+  }
+
+  /**
+   * A title only counts as explicit when the user actually chose it. Clients default the field to
+   * the url itself, which means unset rather than a user's choice.
+   *
+   * @param reqBkmk the add request as it came from the client.
+   * @return true when the request carries a user chosen title.
+   */
+  private boolean hasExplicitTitle(AddBkmkReq reqBkmk) {
+    var title = reqBkmk.title();
+    return title != null && !title.isBlank() && !title.equals(reqBkmk.url());
   }
 
   public List<BookmarkDTO> addBookmarks(List<AddBkmkReq> bookmarks) {
