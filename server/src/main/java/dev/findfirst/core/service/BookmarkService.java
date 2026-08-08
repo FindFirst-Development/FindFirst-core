@@ -216,14 +216,15 @@ public class BookmarkService {
    * Fetches the page so its title and text can be indexed.
    *
    * @param url the url to fetch.
-   * @return the fetched document, or null when the page could not be reached.
+   * @return the fetched document, or null when the page could not be reached. A page we cannot
+   *         fetch is not worth failing the bookmark over, so nothing is thrown here.
    */
   private Document scrape(String url) {
     try {
       var doc = Jsoup.connect(url).get();
       log.debug("Scraped Title: {}", doc.title());
       return doc;
-    } catch (IOException e) {
+    } catch (IOException | IllegalArgumentException e) {
       log.error(e.toString());
       return null;
     }
