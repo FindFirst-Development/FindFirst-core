@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Judson:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Sirivennela&display=swap");
+@import "../node_modules/bootstrap/scss/bootstrap";
 // @import url("https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 // @import url("https://fonts.googleapis.com/css2?family=Judson:ital,wght@0,400;0,700;1,400&display=swap");
 
@@ -27,7 +28,6 @@ $container-max-widths: (
   xxxl: 2860px,
 );
 
-@import "bootstrap/scss/bootstrap";
 
 body {
   width: 100%;

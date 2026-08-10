@@ -8,6 +8,7 @@ const nextConfig = {
       "color-functions",
       "global-builtin",
       "import",
+      "if-function",
     ],
   },
 };
