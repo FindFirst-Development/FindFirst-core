@@ -10,6 +10,9 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
+import dev.findfirst.core.repository.jdbc.BookmarkJDBCRepository;
+import dev.findfirst.core.repository.jdbc.BookmarkTagRepository;
+import dev.findfirst.core.repository.jdbc.TagJDBCRepository;
 import dev.findfirst.security.jwt.service.RefreshTokenService;
 import dev.findfirst.security.jwt.service.TokenService;
 import dev.findfirst.security.userauth.context.UserContext;
@@ -32,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -46,6 +50,10 @@ public class UserManagementService {
   private final PasswordEncoder passwdEncoder;
   private final TokenService ts;
   private final UserContext ut;
+  private final BookmarkJDBCRepository bookmarkJDBCRepository;
+  private final BookmarkTagRepository bookmarkTagRepository;
+  private final TagJDBCRepository tagJDBCRepository;
+
 
   @Value("${findfirst.upload.location}")
   private String uploadLocation;
@@ -218,5 +226,19 @@ public class UserManagementService {
       return new SigninTokens(jwt, refreshToken.getToken());
     }
     throw new NoUserFoundException();
+  }
+
+  @Transactional
+  public void deleteUserAccount() throws NoUserFoundException {
+    int id = ut.getUserId();
+    User user = getUserById(id).orElseThrow(NoUserFoundException::new);
+    log.info("Deleting user account" + id);
+
+    userRepo.deleteAllBookmarkTags(id);
+    userRepo.deleteAllUserBookmarks(id);
+    userRepo.deleteAllUserTags(id);
+    userRepo.delete(user);
+
+    log.info("Successfully deleted user " + id);
   }
 }

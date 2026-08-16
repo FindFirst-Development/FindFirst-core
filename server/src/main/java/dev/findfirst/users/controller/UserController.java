@@ -173,7 +173,8 @@ public class UserController {
       log.debug("User Signing in");
       tkns = userService.signinUser(authorization);
     } catch (NoUserFoundException e) {
-      return ResponseEntity.badRequest().body(new TokenRefreshResponse(null, null, null, e.toString()));
+      return ResponseEntity.badRequest()
+          .body(new TokenRefreshResponse(null, null, null, e.toString()));
     }
 
     ResponseCookie cookie = ResponseCookie.from("findfirst", tkns.jwt()).secure(secure).path("/")
@@ -248,5 +249,11 @@ public class UserController {
     } catch (IOException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
+  }
+
+  @DeleteMapping
+  public ResponseEntity<?> deleteUserAccount() throws NoUserFoundException {
+       userService.deleteUserAccount();
+       return ResponseEntity.status(HttpStatus.OK).body("deleted successfully");
   }
 }

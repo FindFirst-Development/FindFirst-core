@@ -227,7 +227,7 @@ export default function BookmarkCard({ bookmark }: Readonly<BookmarkProp>) {
       let action: TagAction = {
         type: "add",
         id: -1,
-        title: "",
+        title: UNTAGGED,
         bookmark,
       };
       dispatch(action);
