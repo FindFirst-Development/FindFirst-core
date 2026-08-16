@@ -229,7 +229,8 @@ class BookmarkControllerTest {
         BookmarkDTO.class);
     var bkmkDTO = noChangeReq.getBody();
 
-    // The title was given on the add request, so it is kept even though the url was scraped.
+    // The title was given on the add request, so it is kept even though the url was
+    // scraped.
     assertEquals(oldTitle, bkmkDTO.title());
     assertEquals(url, bkmkDTO.url());
 

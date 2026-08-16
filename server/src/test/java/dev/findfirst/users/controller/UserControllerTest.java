@@ -4,7 +4,6 @@ import static dev.findfirst.utilities.HttpUtility.getHttpEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -42,7 +41,6 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.web.client.HttpClientErrorException;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -304,7 +302,7 @@ class UserControllerTest {
 
     // second delete should throw exception of not found as we are not revoking the token
     ResponseEntity<Void> response =
-            restTemplate.exchange("/user", HttpMethod.DELETE, entity, Void.class);
+        restTemplate.exchange("/user", HttpMethod.DELETE, entity, Void.class);
 
     System.out.println(response.getStatusCode());
 

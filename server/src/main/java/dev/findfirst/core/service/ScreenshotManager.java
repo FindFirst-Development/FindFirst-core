@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,6 +30,9 @@ public class ScreenshotManager {
       screenshotUrl = rest.getForObject(url, String.class);
     } catch (ResourceAccessException ex) {
       log.error("Exeception: {}" + ex.getMessage());
+      return Optional.ofNullable(null);
+    } catch (HttpClientErrorException.NotFound ex) {
+      log.error("Resource not found: {}" + ex.getMessage());
       return Optional.ofNullable(null);
     }
     log.debug("Screenshot {}", screenshotUrl);

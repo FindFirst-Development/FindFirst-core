@@ -106,8 +106,8 @@ public class SecSecurityConfig {
     http.csrf(csrf -> csrf.disable())
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(rs -> rs.jwt(jwt -> jwt.decoder(jwtDecoder())
-            .jwtAuthenticationConverter(token -> {
+        .oauth2ResourceServer(
+            rs -> rs.jwt(jwt -> jwt.decoder(jwtDecoder()).jwtAuthenticationConverter(token -> {
               Number userId = token.getClaim(Constants.USER_ID_CLAIM);
               Number roleId = token.getClaim(Constants.ROLE_ID_CLAIM);
               String roleName = token.getClaim(Constants.ROLE_NAME_CLAIM);

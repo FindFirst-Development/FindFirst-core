@@ -253,7 +253,7 @@ public class UserController {
 
   @DeleteMapping
   public ResponseEntity<?> deleteUserAccount() throws NoUserFoundException {
-       userService.deleteUserAccount();
-       return ResponseEntity.status(HttpStatus.OK).body("deleted successfully");
+    userService.deleteUserAccount();
+    return ResponseEntity.status(HttpStatus.OK).body("deleted successfully");
   }
 }

@@ -47,9 +47,9 @@ public class FindFirstApplication {
     config.setAllowCredentials(true);
     // *** URL below needs to match the Vue client URL and port ***
     // Local host and 127.0.0.1 are the same
-    config.setAllowedOriginPatterns(Arrays.asList("https://localhost:3000", "http://localhost:3000",
-        "https://findfirst.dev", "http://localhost", "http://127.0.0.1",
-        "chrome-extension://*", "moz-extension://*"));
+    config.setAllowedOriginPatterns(
+        Arrays.asList("https://localhost:3000", "http://localhost:3000", "https://findfirst.dev",
+            "http://localhost", "http://127.0.0.1", "chrome-extension://*", "moz-extension://*"));
     config.setAllowedMethods(Collections.singletonList("*"));
     config.setAllowedHeaders(Collections.singletonList("*"));
     source.registerCorsConfiguration("/**", config);
