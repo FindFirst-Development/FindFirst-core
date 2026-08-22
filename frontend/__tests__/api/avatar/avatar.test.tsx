@@ -61,7 +61,7 @@ describe("Avatar API Handler", () => {
     const mockAxiosResponse = {
       data: mockImageData,
       headers: {
-        "content-type": "image/jpeg",
+        "content-type": "image/png",
       },
     };
 
@@ -74,7 +74,7 @@ describe("Avatar API Handler", () => {
       "https://api.example.com/user/profile-picture?userId=123",
       { responseType: "arraybuffer" },
     );
-    expect(setHeaderMock).toHaveBeenCalledWith("Content-Type", "image/jpeg");
+    expect(setHeaderMock).toHaveBeenCalledWith("Content-Type", "image/png");
     expect(setHeaderMock).toHaveBeenCalledWith(
       "Cache-Control",
       "public, max-age=3600",
