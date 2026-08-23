@@ -13,8 +13,8 @@ export const TagsCntDispatchContext = createContext<Dispatch<TagAction>>(
 );
 
 /**
- * This code looks complex and it kind of is, its layers of React gobbledygook.
- * The short version of it is that this provider uses 
+ * This code looks complex and it kinda is, its layers of React gobbley-gook.
+ * The short version of it, is that this provider uses 
  * TagsCntDispatchContext context and declares that anyone that uses
  * TagsCntDispatchContext will get the provider value of dispatch. 
  * Meaning that the tagCntReducer will be available to increment those new bookmarks for you.
