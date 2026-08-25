@@ -3,7 +3,6 @@ import BookmarkCard from "@components/Bookmark/BookmarkCard";
 import { useBookmarks } from "@/contexts/BookmarkContext";
 import Bookmark from "@type/Bookmarks/Bookmark";
 import { useTags } from "@/contexts/TagContext";
-import { TagWithCnt } from "@type/Bookmarks/Tag";
 import cardView from "styles/cardView.module.scss";
 
 
@@ -14,6 +13,14 @@ export default function BookmarkCardsView() {
   const tags = useTags();
   const filterMap = new Map<number, Bookmark>();
 
+  /*
+    * @param ids: ids of bookmarks.
+    *
+    * Annoying little caveat that makes this code necessary is that
+    * the tags api returns bookmarks without their tags thus preventing
+    * unnecessary or cyclical structure.
+    *
+    */
   function addIfNotInList(ids: number[]) {
     ids.forEach((bkmkId) => {
       const fnd = bookmarks.fetchedBookmarks.find((v) => v.id == bkmkId);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge, ListGroup } from "react-bootstrap";
 import { useTags } from "@/contexts/TagContext";
 import useAuth from "@components/UseAuth";
@@ -23,7 +23,9 @@ const TagList = () => {
     (t) => t.tags.length === 0,
   );
 
-  const noTags = bookmark.fetchedBookmarks.filter(b => b.tags.length === 0); useEffect(() => {
+  const noTags = bookmark.fetchedBookmarks.filter(b => b.tags.length === 0);
+
+  useEffect(() => {
     if (userAuth && tagMap.size == 0 && !bookmark.loading) {
       setLoading(true); api.getAllTags()
         .then((results) => {

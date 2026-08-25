@@ -39,43 +39,41 @@ export default function App() {
   return userAuth ? (
     <div className={`container-fluid`}>
       <div className={`row ${navStyles.fullHeightRow}`}>
-        <ScreenSizeProvider>
-          <div
-            className={`col-md-4 col-lg-2 col-xl-1 fixed-top ${tagStyles.sideMenu}`}
-          >
-            <div className={`${sideStyles.top}`}>
-              <div>
-                <Image
-                  src="/basic-f-v2-dark-mode-v2-fav.png"
-                  width="65"
-                  height="48"
-                  className={sideStyles.logoPicture}
-                  alt="FindFirst Logo"
-                />
-                <h4
-                  className={`d-inline-block ${baskervilleItalicsBold.className} ${sideStyles.f}`}
-                >
-                  f
-                </h4>
-                <h4 className={`d-inline-block ${baskerville.className}`}>
-                  ind
-                </h4>
-                <h4
-                  className={`d-inline-block ${baskervilleItalics.className} ${sideStyles.first}`}
-                >
-                  F
-                </h4>
-                <h4
-                  className={`d-inline-block ${baskervilleItalics.className} `}
-                >
-                  irst
-                </h4>
-              </div>
+        <div
+          className={`col-md-4 col-lg-2 col-xl-1 fixed-top ${tagStyles.sideMenu}`}
+        >
+          <div className={`${sideStyles.top}`}>
+            <div>
+              <Image
+                src="/basic-f-v2-dark-mode-v2-fav.png"
+                width="65"
+                height="48"
+                className={sideStyles.logoPicture}
+                alt="FindFirst Logo"
+              />
+              <h4
+                className={`d-inline-block ${baskervilleItalicsBold.className} ${sideStyles.f}`}
+              >
+                f
+              </h4>
+              <h4 className={`d-inline-block ${baskerville.className}`}>
+                ind
+              </h4>
+              <h4
+                className={`d-inline-block ${baskervilleItalics.className} ${sideStyles.first}`}
+              >
+                F
+              </h4>
+              <h4
+                className={`d-inline-block ${baskervilleItalics.className} `}
+              >
+                irst
+              </h4>
             </div>
-            <NewBookmarkCard />
-            <TagList />
           </div>
-        </ScreenSizeProvider>
+          <NewBookmarkCard />
+          <TagList />
+        </div>
         <div className={` col-md-8 col-lg-10  ${navStyles.scrollableColumn}`}>
           <BookmarkCardsView />
         </div>

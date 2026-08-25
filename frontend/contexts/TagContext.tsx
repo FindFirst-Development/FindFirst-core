@@ -14,7 +14,7 @@ export const TagsCntDispatchContext = createContext<Dispatch<TagAction>>(
 
 /**
  * This code looks complex and it kinda is, its layers of React gobbley-gook.
- * The short version of it, is that this provider uses 
+ * The short version of it, is that this provider uses
  * TagsCntDispatchContext context and declares that anyone that uses
  * TagsCntDispatchContext will get the provider value of dispatch. 
  * Meaning that the tagCntReducer will be available to increment those new bookmarks for you.
@@ -45,7 +45,6 @@ export function TagCntProvider({
 function tagCntReducer(tagMap: Map<number, TagWithCnt>, action: TagAction) {
   const tagId = action.id;
   const tagCnt: TagWithCnt | undefined = tagMap.get(action.id);
-  const untaggeds: TagWithCnt | undefined = tagMap.get(-1);
   // create a deep copy of the existing.
   const newTagMap = new Map(tagMap);
 
