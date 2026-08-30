@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import screensize from "@services/screenSize.service";
 
 const ScreenSizeContext = createContext<boolean | null>(null);
 
@@ -26,6 +27,7 @@ export const ScreenSizeProvider = ({
 
     const handleResize = () => {
       setIsPC(window.innerWidth > 768);
+      screensize.calculateBuffer(window.innerHeight, window.innerWidth)
     };
 
     let timeoutId: ReturnType<typeof setTimeout>;
