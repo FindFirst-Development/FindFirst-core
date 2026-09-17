@@ -27,8 +27,8 @@ export const ScreenSizeProvider = ({
 
     const handleResize = () => {
       setIsPC(window.innerWidth > 768);
-      screensize.calculateBuffer(window.innerHeight, window.innerWidth)
     };
+
 
     let timeoutId: ReturnType<typeof setTimeout>;
     const debouncedHandleResize = () => {
@@ -36,13 +36,36 @@ export const ScreenSizeProvider = ({
       timeoutId = setTimeout(handleResize, 100);
     };
 
+
+    const handleScroll = () => {
+      screensize.setCardSize(384, 258)
+      screensize.maxHeight = document.documentElement.scrollHeight;
+      screensize.yPos = document.documentElement.scrollTop;
+      console.log("yPos", screensize.yPos);
+      console.log("screensize lastBuffer", screensize.lastBuffer)
+      screensize.lastBuffer = screensize.calculateBufferY(window.innerHeight, window.innerWidth);
+    }
+    let timeoutScrollId: ReturnType<typeof setTimeout>;
+    const debouncedHandleScroll = () => {
+      clearTimeout(timeoutScrollId);
+      timeoutScrollId = setTimeout(handleScroll, 100);
+    };
+
+
     window.addEventListener("resize", debouncedHandleResize);
+    window.addEventListener("scroll", debouncedHandleScroll);
     handleResize();
+    handleScroll();
+
+    console.log("pageHeight", screensize.pageHeight)
 
     return () => {
       window.removeEventListener("resize", debouncedHandleResize);
+      window.removeEventListener("scroll", debouncedHandleScroll);
       clearTimeout(timeoutId);
+      clearTimeout(timeoutScrollId);
     };
+
   }, []);
 
   return (
