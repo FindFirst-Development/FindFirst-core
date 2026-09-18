@@ -8,7 +8,6 @@ import { TagReqPayload, TagWithCnt, UNTAGGED } from "@/types/Bookmarks/Tag";
 import itemStyle from "./tag-list-item.module.scss";
 import menuStyle from "styles/tag.module.scss";
 import { useSelectedTags } from "@/contexts/SelectedContext";
-import { useScreenSize } from "@/contexts/ScreenSizeContext";
 import { useBookmarks } from "@/contexts/BookmarkContext";
 
 const TagList = () => {
@@ -16,7 +15,6 @@ const TagList = () => {
   const tagMap = useTags();
   const [loading, setLoading] = useState(false);
   const { selected, setSelected } = useSelectedTags();
-  const isPC = useScreenSize();
   const bookmark = useBookmarks();
   // check if at least one bookmark has no tags
   const hasUntaggedBookmark = bookmark.fetchedBookmarks.some(
@@ -114,12 +112,10 @@ const TagList = () => {
   }
 
   return (
-    isPC && (
-      <div className={menuStyle.tagList}>
-        {!loading ? <ListGroup>{groupItems || []}</ListGroup> : null}
-      </div>
-    )
-  );
+    <div className={menuStyle.tagList}>
+      {!loading ? <ListGroup>{groupItems || []}</ListGroup> : null}
+    </div>
+  )
 };
 
 export default TagList;

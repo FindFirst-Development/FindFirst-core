@@ -5,7 +5,7 @@ import tagStyles from "@/styles/tag.module.scss";
 import navStyles from "@/styles/navbar.module.scss";
 import sideStyles from "@/styles/sidemenu.module.scss";
 import BookmarkCardsView from "@components/CardView/BookmarkCardsView";
-import { ScreenSizeProvider } from "@/contexts/ScreenSizeContext";
+import { useScreenSize } from "@/contexts/ScreenSizeContext";
 import NewBookmarkCard from "@components/Bookmark/NewBookmarkCard";
 import Image from "next/image";
 import { Libre_Baskerville } from "next/font/google";
@@ -29,6 +29,7 @@ const baskerville = Libre_Baskerville({
 
 export default function App() {
   const userAuth = UseAuth();
+  const isPC = useScreenSize();
 
   /**
    * Ideally when the user visits the site they will actually have a cool landing page
@@ -39,7 +40,7 @@ export default function App() {
   return userAuth ? (
     <div className={`container-fluid`}>
       <div className={`row ${navStyles.fullHeightRow}`}>
-        <div
+        {isPC && <>        <div
           className={`col-md-4 col-lg-2 col-xl-1 fixed-top ${tagStyles.sideMenu}`}
         >
           <div className={`${sideStyles.top}`}>
@@ -49,8 +50,7 @@ export default function App() {
                 width="65"
                 height="48"
                 className={sideStyles.logoPicture}
-                alt="FindFirst Logo"
-              />
+                alt="FindFirst Logo" />
               <h4
                 className={`d-inline-block ${baskervilleItalicsBold.className} ${sideStyles.f}`}
               >
@@ -70,14 +70,13 @@ export default function App() {
                 irst
               </h4>
             </div>
-          </div>
-          <NewBookmarkCard />
-          <TagList />
+          </div><NewBookmarkCard /><TagList />
         </div>
+        </>}
         <div className={` col-md-8 col-lg-10  ${navStyles.scrollableColumn}`}>
           <BookmarkCardsView />
         </div>
       </div>
-    </div>
+    </div >
   ) : null;
 }

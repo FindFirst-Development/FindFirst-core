@@ -70,7 +70,7 @@ export const ScreenSizeProvider = ({
 
   return (
     <ScreenSizeContext.Provider value={isPC}>
-      {isPC && children}
+      {children}
     </ScreenSizeContext.Provider>
   );
 };
