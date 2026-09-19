@@ -34,6 +34,12 @@ export const ScreenSizeProvider = ({
     const debouncedHandleResize = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(handleResize, 100);
+      screensize.maxHeight = document.documentElement.scrollHeight;
+      screensize.yPos = document.documentElement.scrollTop;
+      screensize.lastBuffer = screensize.calculateBufferY(window.innerHeight, window.innerWidth);
+      console.log("buffer at", screensize.lastBuffer)
+      console.log(screensize.maxHeight)
+      console.log("yPos", screensize.yPos);
     };
 
 
@@ -43,7 +49,7 @@ export const ScreenSizeProvider = ({
       screensize.yPos = document.documentElement.scrollTop;
       console.log("yPos", screensize.yPos);
       console.log("screensize lastBuffer", screensize.lastBuffer)
-      screensize.lastBuffer = screensize.calculateBufferY(window.innerHeight, window.innerWidth);
+      screensize.lastBuffer = screensize.calculateBufferY(window.innerHeight);
     }
     let timeoutScrollId: ReturnType<typeof setTimeout>;
     const debouncedHandleScroll = () => {

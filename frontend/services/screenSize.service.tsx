@@ -1,5 +1,4 @@
 "use client"
-import viewService from "./view.service";
 import CardSize from '@/types/ControllerTypes/CardSize';
 
 /**
@@ -128,40 +127,42 @@ export class ScreenSize implements ScreenUtils {
     this.pageItemSize = rowCards * colCards;
   }
 
-  public calculateBufferY(height: number, width: number) {
+  public calculateBufferY(height: number, width: number = 0) {
+
+    // Error gaurds at start of the function, preventing wasted and wrong compute.
     if (this._cardsize == unsetCardsize) {
-      console.log("cardsize not set")
       // edge case the cardsize is not set yet.
-      return 0;
+      throw new Error("Cardsize should be set.");
+    }
+
+    if (!this.pageHeight) {
+      throw new Error("The height is not set.");
+    }
+
+    if (!this.maxHeight) {
+      throw new Error("The maxHeight is not set.");
+    }
+
+    const ch = this.cardsize.height;
+    const rowCards = Math.floor(this.maxHeight / ch);
+    if (width) {
+      // convert cards to pixel space.
+      this.lastBuffer = rowCards * this.cardsize.height / 3;
+      return this.lastBuffer;
     }
 
     if (this.lastBuffer && this.yPos > this.lastBuffer) {
-      console.log("CALCULATING - lastBuffer")
-      if (!this.pageHeight) {
-        console.log("not set")
-        throw new Error("The height is not set");
-      }
       return this.lastBuffer + height;
     }
 
     if (!this.lastBuffer) {
-      const ch = this.cardsize.height;
-      console.log("ch", ch)
-      const rowCards = Math.floor(this.maxHeight / ch);
-
-      console.log("maxHeight", this.maxHeight)
-
       // edge case small screen.
       if (rowCards == 1) {
         return this.cardsize.height;
       }
-
-      console.log("rowCards", rowCards)
-
       // The last buffer is unset, we're setting the
       // initial buffer.
       this.lastBuffer = rowCards * this.cardsize.height / 3;
-
     }
     return this.lastBuffer;
   }
