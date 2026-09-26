@@ -44,12 +44,9 @@ export class ScreenSize implements ScreenUtils {
     // borrowed from https://www.webdevtutor.net/blog/typescript-window-is-not-defined
     if (typeof window !== 'undefined') {
       (window as any).addEventListener('load', () => {
-        console.log("loaded")
         this._pageHeight = window.innerHeight;
         this._pageWidth = window.innerWidth;
         this._maxHeight = window.innerHeight;
-
-        console.log("constructor", this.pageHeight)
       });
     };
 
@@ -74,6 +71,7 @@ export class ScreenSize implements ScreenUtils {
   public get yPos(): number {
     return this._yPos;
   }
+
   public set yPos(value: number) {
     this._yPos = value;
   }
@@ -89,6 +87,7 @@ export class ScreenSize implements ScreenUtils {
   public get pageHeight(): number {
     return this._pageHeight;
   }
+
   public set pageHeight(value: number) {
     this._pageHeight = value;
   }
@@ -96,12 +95,15 @@ export class ScreenSize implements ScreenUtils {
   public get pageItemSize(): number {
     return this._pageItemSize;
   }
+
   public set pageItemSize(value: number) {
     this._pageItemSize = value;
   }
+
   public get pageWidth(): number {
     return this._pageWidth;
   }
+
   public set pageWidth(value: number) {
     this._pageWidth = value;
   }
@@ -166,7 +168,6 @@ export class ScreenSize implements ScreenUtils {
     }
     return this.lastBuffer;
   }
-
 }
 
 // Anyone who just imports from this class will get the singleton ScreenSize.

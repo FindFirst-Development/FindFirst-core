@@ -49,7 +49,10 @@ export const ScreenSizeProvider = ({
       screensize.yPos = document.documentElement.scrollTop;
       console.log("yPos", screensize.yPos);
       console.log("screensize lastBuffer", screensize.lastBuffer)
-      screensize.lastBuffer = screensize.calculateBufferY(window.innerHeight);
+      // wait for the actual page load. 
+      if (screensize.yPos) {
+        screensize.lastBuffer = screensize.calculateBufferY(window.innerHeight);
+      }
     }
     let timeoutScrollId: ReturnType<typeof setTimeout>;
     const debouncedHandleScroll = () => {

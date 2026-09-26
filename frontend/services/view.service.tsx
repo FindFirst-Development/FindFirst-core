@@ -1,4 +1,6 @@
 import Bookmark from "@type/Bookmarks/Bookmark";
+import authService from "./auth.service";
+import api from "@api/Api";
 
 interface SearchFunctions {
 
@@ -17,8 +19,35 @@ interface SearchFunctions {
   */
 class ViewService {
 
-  private inView: Bookmark[] = [];
+  private _inView: Bookmark[] = [];
 
+  public get inView(): Bookmark[] {
+    return this._inView;
+  }
+  public set inView(value: Bookmark[]) {
+    this._inView = value;
+  }
+  private _allRetrieved: Bookmark[] = [];
+
+  public get allRetrieved(): Bookmark[] {
+    return this._allRetrieved;
+  }
+  public set allRetrieved(value: Bookmark[]) {
+    this._allRetrieved = value;
+  }
+
+
+  constructor() {
+    console.log('ViewService loaded')
+    if (authService.getAuthorized()) {
+      console.log('constructing view service')
+      api.getAllBookmarks().then((resp) => {
+        console.log(resp)
+        // dispatch({ type: "add", bookmarks: resp.data as Bookmark[] });
+        // setIsLoading(false);
+      });
+    }
+  }
 
 
 }

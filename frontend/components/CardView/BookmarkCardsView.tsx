@@ -4,6 +4,7 @@ import { useBookmarks } from "@/contexts/BookmarkContext";
 import Bookmark from "@type/Bookmarks/Bookmark";
 import { useTags } from "@/contexts/TagContext";
 import cardView from "styles/cardView.module.scss";
+import viewService from "@services/view.service";
 
 
 // Bookmark group composed of Bookmarks.
@@ -12,7 +13,7 @@ export default function BookmarkCardsView() {
   const { selected } = useSelectedTags();
   const tags = useTags();
   const filterMap = new Map<number, Bookmark>();
-
+  const bkmksTemp =  viewService.allRetrieved;
   /*
     * @param ids: ids of bookmarks.
     *
