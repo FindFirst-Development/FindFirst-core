@@ -266,7 +266,7 @@ VALUES (
 -- id: 40
 INSERT INTO bookmark (id, title, url, user_id, scrapable)
 VALUES (
-    20,
+    40,
     'Best Sci-Fi Books of All Time',
     'https://www.penguinrandomhouse.com/the-best-sci-fi-books-of-all-time',
     1,
