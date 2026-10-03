@@ -4,7 +4,7 @@ WORKDIR /app
 COPY --exclude=build/ . .
 RUN gradle assemble --no-daemon
 
-FROM openjdk:26-ea-slim  AS runner
+FROM openjdk:28-ea-slim  AS runner
 WORKDIR /app
 COPY --from=builder /app/build/libs/findfirst-1.0.0.jar findfirst.jar
 COPY scripts/ scripts/

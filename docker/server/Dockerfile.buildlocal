@@ -1,4 +1,4 @@
-FROM openjdk:26-ea-slim 
+FROM openjdk:28-ea-slim 
 WORKDIR /app
 COPY ./build/libs/findfirst-1.0.0.jar findfirst.jar
 ENTRYPOINT ["java", "-jar", "findfirst.jar"]
